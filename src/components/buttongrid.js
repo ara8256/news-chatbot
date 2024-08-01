@@ -2,10 +2,11 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/buttongrid.css';
 
-const ButtonGrid = () => {
+const ButtonGrid = ({onsetNumber}) => {
+  
 
   const handleCardClick = (cardTitle) => {
-    alert(`Card clicked: ${cardTitle}`);
+    onsetNumber(cardTitle);
   };
 
   return (
@@ -14,7 +15,7 @@ const ButtonGrid = () => {
         <div className="row d-flex justify-content-center align-items-center mb-3">
           <div className="col-3">
             <a href='#' style={{textDecoration:"none"}}>
-              <div className="card" onClick={() => handleCardClick('Special title treatment')}   style={{
+              <div className="card" onClick={() => handleCardClick(0)}   style={{
                   borderRadius: "2vh",
                   border: "1px solid #BA9359",
                   background:"transparent",
@@ -31,7 +32,7 @@ const ButtonGrid = () => {
             </a>
           </div>
           <div className="col-3">
-            <div className="card" onClick={() => handleCardClick('Special title treatment')} style={{
+            <div className="card" onClick={() => handleCardClick(1)} style={{
                   borderRadius: "2vh",
                   border: "1px solid #BA9359",
                   background:"transparent",
@@ -47,7 +48,7 @@ const ButtonGrid = () => {
             </div>
           </div>
           <div className="col-3">
-            <div className="card" onClick={() => handleCardClick('Special title treatment')} style={{
+            <div className="card" onClick={() => handleCardClick(2)} style={{
                   borderRadius: "2vh",
                   border: "1px solid #BA9359",
                   background:"transparent",
@@ -65,7 +66,7 @@ const ButtonGrid = () => {
         </div>
         <div className="row justify-content-center mb-3">
           <div className="col-3">
-            <div className="card" onClick={() => handleCardClick('Special title treatment')} style={{
+            <div className="card" onClick={() => handleCardClick(3)} style={{
                   borderRadius: "2vh",
                   border: "1px solid #BA9359",
                   background:"transparent",
@@ -81,7 +82,7 @@ const ButtonGrid = () => {
             </div>
           </div>
           <div className="col-3">
-            <div className="card" onClick={() => handleCardClick('Special title treatment')} style={{
+            <div className="card" onClick={() => handleCardClick(4)} style={{
                   borderRadius: "2vh",
                   border: "1px solid #BA9359",
                   background:"transparent",
@@ -97,7 +98,7 @@ const ButtonGrid = () => {
             </div>
           </div>
           <div className="col-3">
-            <div className="card" onClick={() => handleCardClick('Special title treatment')} style={{
+            <div className="card" onClick={() => handleCardClick(5)} style={{
                   borderRadius: "2vh",
                   border: "1px solid #BA9359",
                   background:"transparent",

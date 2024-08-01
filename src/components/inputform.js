@@ -1,11 +1,18 @@
 
 import "../css/input.css"
 import { useState } from "react";
+import axios from "axios";
+import AudioRecorder from "./AudioRecorder";
 
-const InputForm = ({ onSendMessage }) => {
+const InputForm = ({ onSendMessage , onAudioRecorded}) => {
   const [inputValue, setInputValue] = useState("");
+  const[query,setQuery] = useState('')
+  const[error,setError] = useState('')
 
 
+// const handleaudio = () =>
+
+ 
 
 
   const handleChange = (event) => {
@@ -79,6 +86,7 @@ const handleSubmit = (event) => {
                 </button>
               </div>
             </form>
+            <AudioRecorder onAudioRecorded={onAudioRecorded} />
            
             </div>
           </div>
