@@ -1,11 +1,30 @@
 
 import "../css/input.css"
+import { useState } from "react";
 
-const InputForm = () => {
+const InputForm = ({ onSendMessage }) => {
+  const [inputValue, setInputValue] = useState("");
+
+
+
+
+  const handleChange = (event) => {
+    setInputValue(event.target.value);
+};
+
+
+
+
+const handleSubmit = (event) => {
+  event.preventDefault();
+  if (inputValue.trim() !== '') {
+      onSendMessage(inputValue);
+      console.log(inputValue)
+      setInputValue('');
+  }
+};
     
-    const handleSubmit = () =>{
-        alert("Form submitted");
-    }
+    
 
     return(
         <div className="container mb-3 pos">
@@ -32,8 +51,8 @@ const InputForm = () => {
                   type="text"
                   className="form-control flex-grow-1"
                   placeholder="Message"
-                //   value={inputValue}
-                //   onChange={handleChange}
+                  value={inputValue}
+                  onChange={handleChange}
                   style={{
                     background: "none",
                     border: "none",
@@ -60,11 +79,6 @@ const InputForm = () => {
                 </button>
               </div>
             </form>
-            
-            {/* <button onClick={isRecording ? stopRecording : startRecording} className="btn border-0 outline-none"> */}
-              {/* {isRecording ? <img src={microphone} alt="Speak" style={{ width: '24px', height: '24px' }} /> : <img src={mute} alt="Speak" style={{ width: '24px', height: '24px' }} />} */}
-            {/* </button> */}
-            {/* {error && <p style={{ color: "red" }}>{error}</p>} */}
            
             </div>
           </div>

@@ -10,19 +10,84 @@ import NewsCard from './components/newsCard';
 import thumbnail1 from "./image.jpg"
 import axios from 'axios';
 
-import { Component, useState } from 'react';
+import { Component, useState, useEffect } from 'react';
 
 function App() {
 
   const[query,setQuery] = useState('')
   const[error,setError] = useState('')
+  const [messages, setMessages] = useState("");
+  const [summary , setSummary] = useState("");
+  const [Title , setTitle] = useState("");
+  const [Url , setUrl] = useState("");
+  const [image, setImage] = useState(null);
+  // const [number, setnumber] = useState(0);
 
 
-  const news = {
-    headline: "Artificial Intelligence Revolutionizes Industries",
-    thumbnail: "/path/to/thumbnail.jpg", // Replace with the actual path to the thumbnail image
-    description: "AI offers numerous advantages and has the potential to revolutionize various aspects of our lives..."
+  const handelNumber = () =>{
+
   }
+
+
+
+
+
+
+
+  const handleSendMessage = (message) => {
+    setMessages(message);
+    handleSendMessageApi(message);
+    
+};
+
+
+
+const handleSendMessageApi = async (messages) => {
+  try {
+    const response = await fetch('http://127.0.0.1:5000/generate_response_news', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ messages }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const data = await response.json();
+    console.log(data);
+    console.log(data.Title)
+
+    setTitle(data.Title);
+    setSummary(data.Summary);
+    setUrl(data.Webpage);
+    setImage(data.Image);
+
+  } catch (error) {
+    console.error('Error:', error);
+    setError('An error occurred while fetching the response.');
+  }
+};
+
+
+
+
+
+
+
+const sendtoapi = () => {
+  console.log(messages)
+  handleSendMessageApi()
+};
+
+
+
+
+
+
+  
 
 
     const handleAudioRecorded = async (audioBlob) => {
@@ -57,13 +122,15 @@ function App() {
       <Sidebar/>
     </div>
     <div className='col-10'>
+
+      {Title &&
       <NewsCard
-       headline={news.headline}
+       headline={Title}
        thumbnail={thumbnail1}
-       description={news.description}
-       />
+       description={summary}
+       />}
       <ButtonGrid />
-      <InputForm/>
+      <InputForm  onSendMessage={handleSendMessage}/>
       <AudioRecorder onAudioRecorded={handleAudioRecorded} />
 
     </div>
