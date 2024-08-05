@@ -1,4 +1,4 @@
-.sidebar{
+/* .sidebar{
     background-color: #eaf2e1;
     height: 94vh;
     margin-left: 0%;
@@ -7,11 +7,12 @@
     align-items: center;
     justify-content: space-between;
     padding: 10px;
+    width : 20vh;
 } 
 
 .rounded-button {
     
-    background-color: #BA9359; /* Change to your desired color */
+    background-color: #BA9359; 
     color: white;
     border: none;
     border-radius: 10px;
@@ -30,4 +31,53 @@
     margin-top: 10px;
     text-align: center;
     font-size: small;
+} */
+
+
+
+
+/* sidebar.css */
+
+.sidebar {
+    width: 30vh;
+    background-color: #eaf2e1;
+    padding: 15px;
+    position: fixed;
+    height: 100%;
+    overflow: auto;
 }
+
+.sidebar a {
+    text-decoration: none;
+    color: #000;
+    display: block;
+    padding: 8px 16px;
+}
+
+.sidebar a:hover {
+    background-color: #575757;
+    color: white;
+}
+
+.rounded-button {
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #BA9359; 
+    color: white;
+    border: none;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: auto;
+}
+
+.text-section {
+    margin-top: 10px;
+    text-align: center;
+    font-size: small;
+}
+
+

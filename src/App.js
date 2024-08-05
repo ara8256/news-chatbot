@@ -9,6 +9,7 @@ import ButtonGrid from './components/buttongrid';
 import NewsCard from './components/newsCard';
 import thumbnail1 from "./image.jpg"
 import axios from 'axios';
+import Groq from 'groq-sdk';
 
 import { Component, useState, useEffect } from 'react';
 
@@ -67,7 +68,7 @@ const hsndlenumbertiapi = async (number) =>{
 
   const handleSendMessage = (message) => {
     setMessages(message);
-    handleSendMessageApi(message);
+    generateResponseNews(message);
     
 };
 
@@ -75,7 +76,7 @@ const hsndlenumbertiapi = async (number) =>{
 
 const handleSendMessageApi = async (messages) => {
   try {
-    const response = await fetch('https://abdulrehman1122334455.pythonanywhere.com/generate_response_news', {
+    const response = await fetch('https://wasamkhan.pythonanywhere.com/generate_response_news', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -108,10 +109,10 @@ const handleSendMessageApi = async (messages) => {
 
 
 
-const sendtoapi = () => {
-  console.log(messages)
-  handleSendMessageApi()
-};
+// const sendtoapi = () => {
+//   console.log(messages)
+//   handleSendMessageApi()
+// };
 
 
 
@@ -144,10 +145,214 @@ const sendtoapi = () => {
         //setLoading(false); // End loading
       }
   };
+const [userInput, setUserInput] = useState('');
+const [newsData, setNewsData] = useState(null);
+const [fixedNewsData, setFixedNewsData] = useState(null);
+const [index, setIndex] = useState(0);
+
+// const groq = new Groq({ apiKey: process.env.REACT_APP_GROQ_API_KEY });
+
+
+
+const extractKeywordsFromQuery = async (query) => {
+  const groq = new Groq({ apiKey:`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`,dangerouslyAllowBrowser: true });
+  console.log(query)
+
+  try {
+    const chatCompletion = await groq.chat.completions.create({
+      messages: [
+        {
+          role: 'user',
+          content: `Give me the keywords from the following sentence in list format []. Just give the list, no extra words ${query}`,
+        },
+      ],
+      model: 'llama3-70b-8192',
+    });
+
+    const keywords = chatCompletion.choices[0]?.message?.content;
+    const matches = keywords.match(/\[(.*?)\]/);
+    console.log(matches)
+    return matches ? matches[1].split(',').map(keyword => keyword.trim()) : [];
+  } catch (error) {
+    console.error("Error fetching keywords:", error);
+    return [];
+  }
+};
+
+const getNews = async (keywords) => {
+  const url = 'https://google-news13.p.rapidapi.com/search';
+  const params = new URLSearchParams({
+    keyword: keywords[0],
+    lr: 'en-US',
+  });
+
+  const options = {
+    method: 'GET',
+    headers: {
+      'x-rapidapi-key': 'f9d5b57419mshe8ed7982c05f8f5p1cbbc4jsn53c7214c1bdd',
+      'x-rapidapi-host': 'google-news13.p.rapidapi.com',
+    },
+  };
+
+  try {
+    const response = await fetch(`${url}?${params}`, options);
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('Error response data:', errorData);
+      console.error('Error response status:', response.status);
+      throw new Error('Error fetching news');
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Fetch error:', error);
+    throw new Error('Error fetching news');
+  }
+};
+const getURLsAndImages = (data) => {
+  return data.items.map(item => ({
+    url: item.newsUrl,
+    thumbnail: item.images?.thumbnail
+  })).filter(item => item.url && item.thumbnail);
+};
+
+const getTextFromNews = async (pages) => {
+  for (let page of pages) {
+    try {
+      const response = await axios.get(`https://cors-anywhere.herokuapp.com/${page.url}`, {
+        headers: {
+          'Accept-Language': 'en-US,en;q=0.5',
+        }
+      });
+      
+
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(response.data, 'text/html');
+      const paragraphs = Array.from(doc.querySelectorAll('p')).map(p => p.textContent).join(' ');
+
+      if (!paragraphs.startsWith('Updated ') && paragraphs) {
+        console.log(paragraphs);
+        return { text: paragraphs, url: page.url, thumbnail: page.thumbnail };
+      }
+    } catch (error) {
+      console.error('Failed to retrieve webpage:', error);
+    }
+  }
+};
+
+
+const getTitle = async (text) => {
+  const groq = new Groq({ apiKey: `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`,dangerouslyAllowBrowser: true });
+
+  try {
+    const chatCompletion = await groq.chat.completions.create({
+      messages: [
+        {
+          role: 'user',
+          content: `Give me the news headline for the following text. Just give the one liner headline only, no extra words ${text}`,
+        },
+      ],
+      model: 'llama3-70b-8192',
+    });
+
+    return chatCompletion.choices[0]?.message?.content;
+  } catch (error) {
+    console.error("Error fetching headline:", error);
+    return "Error fetching headline.";
+  }
+};
+
+const getSummary = async (text) => {
+  const groq = new Groq({ apiKey:`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` ,dangerouslyAllowBrowser: true});
+
+  try {
+    const chatCompletion = await groq.chat.completions.create({
+      messages: [
+        {
+          role: 'user',
+          content: `Give me the detailed summary of the following text: ${text}`,
+        },
+      ],
+      model: 'llama3-70b-8192',
+    });
+
+    return chatCompletion.choices[0]?.message?.content;
+  } catch (error) {
+    console.error("Error fetching summary:", error);
+    return "Error fetching summary.";
+  }
+};
+
+const fetchImageBase64 = async (imageUrl) => {
+  try {
+    const response = await axios.get(imageUrl, { responseType: 'arraybuffer' });
+    const base64Image = btoa(
+      new Uint8Array(response.data).reduce((data, byte) => data + String.fromCharCode(byte), '')
+    );
+    return base64Image;
+  } catch (error) {
+    console.error('Error fetching or encoding image:', error);
+    return null;
+  }
+};
+
+const generateResponseNews = async (userInput) => {
+  try {
+    const keywords = await extractKeywordsFromQuery(userInput);
+    const news = await getNews(keywords);
+    const urlsAndImages = getURLsAndImages(news);
+    const textFromNews = await getTextFromNews(urlsAndImages);
+    // const image = textFromNews?.thumbnail ? await fetchImageBase64(textFromNews.thumbnail) : null;
+    const title = await getTitle(textFromNews.text);
+    setTitle(title)
+    const summary = await getSummary(textFromNews.text);
+    setSummary(summary)
+    setUrl(textFromNews.url)
+    // setNewsData({ title, summary, url: textFromNews.url, image });
+    // setNewsData(news);
+  } catch (error) {
+    console.error('Error getting the news:', error);
+  }
+};
+
+const getFixedNews = async (para) => {
+  const response = await axios.get(`https://google-news13.p.rapidapi.com/${para}`, {
+    params: { lr: 'en-US' },
+    headers: {
+      'x-rapidapi-key': 'f9d5b57419mshe8ed7982c05f8f5p1cbbc4jsn53c7214c1bdd',
+      'x-rapidapi-host': 'google-news13.p.rapidapi.com'
+    }
+  });
+
+  return response.data;
+};
+
+const fixedRequests = async () => {
+  const endpoints = ['latest', 'world', 'entertainment', 'sport', 'technology', 'business'];
+
+  try {
+    const news = await getFixedNews(endpoints[index]);
+    const urlsAndImages = getURLsAndImages(news);
+    const textFromNews = await getTextFromNews(urlsAndImages);
+    const image = textFromNews?.thumbnail ? await fetchImageBase64(textFromNews.thumbnail) : null;
+    const title = await getTitle(textFromNews.text);
+    const summary = await getSummary(textFromNews.text);
+
+    setFixedNewsData({ title, summary, image, url: textFromNews.url });
+  } catch (error) {
+    console.error('Error getting the news:', error);
+  }
+};
+
+
+
 
   return (
     <div className="App">
    <Navbar />
+
    <div className='container-fluid'>
    <div className='row'>
     <div className='col-2'>
@@ -171,6 +376,23 @@ const sendtoapi = () => {
    </div>
     </div>
     </div>
+
+
+//   <div className='App'>
+//     <Navbar/>
+//     <Sidebar/>
+//     <div className='maincon'>
+//     {Title && thumbnail1 &&
+//       <NewsCard
+//        headline={Title}
+//        thumbnail={image}
+//        description={summary}
+//        />}
+
+//        {!Title && <ButtonGrid onsetNumber =  {handelNumber}/>}
+//        </div>
+// </div>
+  
   );
 }
 
