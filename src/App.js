@@ -35,7 +35,7 @@ function App() {
 
 const hsndlenumbertiapi = async (number) =>{
   try {
-    const response = await fetch('http://127.0.0.1:5000/fixed_requests', {
+    const response = await fetch('https://wasamkhan.pythonanywhere.com/fixed_requests', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -75,7 +75,7 @@ const hsndlenumbertiapi = async (number) =>{
 
 const handleSendMessageApi = async (messages) => {
   try {
-    const response = await fetch('http://127.0.0.1:5000/generate_response_news', {
+    const response = await fetch('https://abdulrehman1122334455.pythonanywhere.com/generate_response_news', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -126,7 +126,7 @@ const sendtoapi = () => {
       try {
         const formData = new FormData();
         formData.append('audio', audioBlob,'audio.wav');
-        const res = await axios.post('http://127.0.0.1:5000/transcribe', formData, {
+        const res = await axios.post('https://wasamkhan.pythonanywhere.com/transcribe', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },

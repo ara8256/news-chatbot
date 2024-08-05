@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/newsbar.css'
+import svg from "../pictures/speaker-sketch-loud-volume-interface-tool-svgrepo-com.svg"
 
 const NewsCard = ({ headline, thumbnail, description }) => {
   const [image, setImage] = useState(null);
+  const [isSpeaking, setIsSpeaking] = useState(false);
 
   const fetchImage = (thumbnail) => {
     try {
@@ -24,6 +26,29 @@ const NewsCard = ({ headline, thumbnail, description }) => {
       console.error('Failed to load image:', error);
     }
   };
+
+
+  const handleSpeak = () => {
+    if ('speechSynthesis' in window) {
+      if (isSpeaking) {
+        window.speechSynthesis.cancel();
+        setIsSpeaking(false);
+      } else {
+        const utterance = new SpeechSynthesisUtterance(description);
+        // utterance.lang = language;
+        // console.log(utterance.lang);
+        window.speechSynthesis.speak(utterance);
+        setIsSpeaking(true);
+        
+        // Reset the isSpeaking flag when the speech ends
+        utterance.onend = () => {
+          setIsSpeaking(false);
+        };
+      }
+    } else {
+      alert('Sorry, your browser does not support text to speech!');
+    }
+  }
 
   useEffect(() => {
     fetchImage(thumbnail);
@@ -50,6 +75,9 @@ const NewsCard = ({ headline, thumbnail, description }) => {
         </div>
         <div className='row'>
         <p className="card-text" style={{fontSize:"3vh"}}>{description}</p>
+        {/* <button onClick={handleSpeak}>
+          <img src={svg} alt="Speak" style={{ width: '18px', height: '18px' }} />
+        </button> */}
         </div>
       </div>
     </div>
