@@ -58,11 +58,11 @@ const NewsCard = ({ headline, thumbnail, description }) => {
     <div className="container mt-4 max">
       
     <div className="card newsbar">
-    <div style={{maxHeight:"78vh",maxWidth:"80vw", overflowY: "auto" , overflowX:'hidden'}}>
+    <div style={{maxHeight:"78vh",maxWidth:"80vw", overflowY: "auto" , overflowX:'hidden', scrollbarWidth: "none"}}>
       <div className="row no-gutters">
         <div className="col-md-4">
           {image ? (
-            <img src={image.src} className="card-img" alt={image.alt} />
+            <img src={image.src} className="card-img mt-1 ml-1" alt={image.alt} />
           ) : (
             <img src="path/to/default-image.jpg" className="card-img" alt="Default" />
           )}
@@ -76,7 +76,7 @@ const NewsCard = ({ headline, thumbnail, description }) => {
       </div>
       <div className='row'>
         <div style={{marginLeft:"2vh"}}>
-      <button className="speaker_button" onClick={handleSpeak}>
+      <button className="speaker_button mt-1" onClick={handleSpeak}>
           <img src={svg} alt="Speak" style={{ width: '18px', height: '18px' }} />
         </button>
         </div>

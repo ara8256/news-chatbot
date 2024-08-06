@@ -14,6 +14,10 @@ import Groq from 'groq-sdk';
 import { Component, useState, useEffect } from 'react';
 
 function App() {
+  const [userInput, setUserInput] = useState('');
+const [newsData, setNewsData] = useState(null);
+const [fixedNewsData, setFixedNewsData] = useState(null);
+const [index, setIndex] = useState(0);
 
   const[query,setQuery] = useState('')
   const[error,setError] = useState('')
@@ -26,7 +30,7 @@ function App() {
 
 
   const handelNumber = (number) =>{
-    hsndlenumbertiapi(number)
+    fixedRequests(number);
   }
 
 
@@ -134,7 +138,7 @@ const handleSendMessageApi = async (messages) => {
         });
         console.log(res.data.transcription)
         setQuery(res.data.transcription);
-        handleSendMessageApi(res.data.transcription)
+        generateResponseNews(res.data.transcription);
         //handleQuerySubmit(res.data.transcription);
       } catch (error) {
         console.error('Error transcribing audio:', error);
@@ -145,17 +149,14 @@ const handleSendMessageApi = async (messages) => {
         //setLoading(false); // End loading
       }
   };
-const [userInput, setUserInput] = useState('');
-const [newsData, setNewsData] = useState(null);
-const [fixedNewsData, setFixedNewsData] = useState(null);
-const [index, setIndex] = useState(0);
+
 
 // const groq = new Groq({ apiKey: process.env.REACT_APP_GROQ_API_KEY });
 
 
 
 const extractKeywordsFromQuery = async (query) => {
-  const groq = new Groq({ apiKey:`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`,dangerouslyAllowBrowser: true });
+  const groq = new Groq({ apiKey:`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`,dangerouslyAllowBrowser: true });
   console.log("query",query)
 
   try {
@@ -248,7 +249,7 @@ const getTextFromNews = async (pages) => {
 
 
 const getTitle = async (text) => {
-  const groq = new Groq({ apiKey: `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`,dangerouslyAllowBrowser: true });
+  const groq = new Groq({ apiKey: `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`,dangerouslyAllowBrowser: true });
 
   try {
     const chatCompletion = await groq.chat.completions.create({
@@ -269,7 +270,7 @@ const getTitle = async (text) => {
 };
 
 const getSummary = async (text) => {
-  const groq = new Groq({ apiKey:`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` ,dangerouslyAllowBrowser: true});
+  const groq = new Groq({ apiKey:`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` ,dangerouslyAllowBrowser: true});
 
   try {
     const chatCompletion = await groq.chat.completions.create({
@@ -290,8 +291,10 @@ const getSummary = async (text) => {
 };
 
 const fetchImageBase64 = async (imageUrl) => {
+  const corsProxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(imageUrl);
+  console.log(corsProxyUrl);
   try {
-    const response = await axios.get(imageUrl, { responseType: 'arraybuffer' });
+    const response = await axios.get(corsProxyUrl, { responseType: 'arraybuffer' });
     const base64Image = btoa(
       new Uint8Array(response.data).reduce((data, byte) => data + String.fromCharCode(byte), '')
     );
@@ -308,7 +311,8 @@ const generateResponseNews = async (userInput) => {
     const news = await getNews(keywords);
     const urlsAndImages = getURLsAndImages(news);
     const textFromNews = await getTextFromNews(urlsAndImages);
-    // const image = textFromNews?.thumbnail ? await fetchImageBase64(textFromNews.thumbnail) : null;
+    const image = textFromNews?.thumbnail ? await fetchImageBase64(textFromNews.thumbnail) : null;
+    setImage(image)
     const title = await getTitle(textFromNews.text);
     setTitle(title)
     const summary = await getSummary(textFromNews.text);
@@ -333,18 +337,22 @@ const getFixedNews = async (para) => {
   return response.data;
 };
 
-const fixedRequests = async () => {
+const fixedRequests = async (index) => {
   const endpoints = ['latest', 'world', 'entertainment', 'sport', 'technology', 'business'];
 
   try {
-    const news = await getFixedNews(endpoints[index]);
+    const news = await getNews(endpoints[index]);
     const urlsAndImages = getURLsAndImages(news);
     const textFromNews = await getTextFromNews(urlsAndImages);
     const image = textFromNews?.thumbnail ? await fetchImageBase64(textFromNews.thumbnail) : null;
+    setImage(image)
     const title = await getTitle(textFromNews.text);
+    setTitle(title)
     const summary = await getSummary(textFromNews.text);
-
-    setFixedNewsData({ title, summary, image, url: textFromNews.url });
+    setSummary(summary)
+    setUrl(textFromNews.url)
+    // setNewsData({ title, summary, url: textFromNews.url, image });
+    // setNewsData(news);
   } catch (error) {
     console.error('Error getting the news:', error);
   }
