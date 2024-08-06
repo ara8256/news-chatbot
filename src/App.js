@@ -54,6 +54,7 @@ const hsndlenumbertiapi = async (number) =>{
 
     const data = await response.json();
     console.log(data);
+    
     console.log(data.Title)
 
     setTitle(data.Title);
