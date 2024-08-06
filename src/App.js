@@ -190,7 +190,7 @@ const getNews = async (keywords) => {
   const options = {
     method: 'GET',
     headers: {
-      'x-rapidapi-key': 'bbbcc6357emshfa5e0044a8ce1c2p1dd1a5jsnfdb65bfdfc04',
+      'x-rapidapi-key': 'b971686e5emsh4b3caeb5d9c63dfp1525efjsn656e0ef7ab43',
       'x-rapidapi-host': 'google-news13.p.rapidapi.com',
     },
   };
@@ -329,7 +329,7 @@ const getFixedNews = async (para) => {
   const response = await axios.get(`https://google-news13.p.rapidapi.com/${para}`, {
     params: { lr: 'en-US' },
     headers: {
-      'x-rapidapi-key': 'bbbcc6357emshfa5e0044a8ce1c2p1dd1a5jsnfdb65bfdfc04',
+      'x-rapidapi-key': 'b971686e5emsh4b3caeb5d9c63dfp1525efjsn656e0ef7ab43',
       'x-rapidapi-host': 'google-news13.p.rapidapi.com'
     }
   });
@@ -341,7 +341,7 @@ const fixedRequests = async (index) => {
   const endpoints = ['latest', 'world', 'entertainment', 'sport', 'technology', 'business'];
 
   try {
-    const news = await getNews(endpoints[index]);
+    const news = await getFixedNews(endpoints[index]);
     const urlsAndImages = getURLsAndImages(news);
     const textFromNews = await getTextFromNews(urlsAndImages);
     const image = textFromNews?.thumbnail ? await fetchImageBase64(textFromNews.thumbnail) : null;
