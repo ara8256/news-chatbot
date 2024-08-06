@@ -190,7 +190,7 @@ const getNews = async (keywords) => {
   const options = {
     method: 'GET',
     headers: {
-      'x-rapidapi-key': 'b971686e5emsh4b3caeb5d9c63dfp1525efjsn656e0ef7ab43',
+      'x-rapidapi-key': '3a030a2a38msh0539db88610b38ap1089a8jsn6c3326e0c947',
       'x-rapidapi-host': 'google-news13.p.rapidapi.com',
     },
   };
@@ -329,7 +329,7 @@ const getFixedNews = async (para) => {
   const response = await axios.get(`https://google-news13.p.rapidapi.com/${para}`, {
     params: { lr: 'en-US' },
     headers: {
-      'x-rapidapi-key': 'b971686e5emsh4b3caeb5d9c63dfp1525efjsn656e0ef7ab43',
+      'x-rapidapi-key': '3a030a2a38msh0539db88610b38ap1089a8jsn6c3326e0c947',
       'x-rapidapi-host': 'google-news13.p.rapidapi.com'
     }
   });
