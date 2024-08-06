@@ -372,7 +372,7 @@ const fixedRequests = async (index) => {
     </div>
     <div className='col-10'>
 
-      {Title && thumbnail1 &&
+      {Title && thumbnail1 && summary &&
       <NewsCard
        headline={Title}
        thumbnail={image}
