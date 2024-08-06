@@ -80,8 +80,9 @@ const NewsCard = ({ headline, thumbnail, description }) => {
           <img src={svg} alt="Speak" style={{ width: '18px', height: '18px' }} />
         </button>
         </div>
-        <p className="card-text" style={{ fontSize: "3vh" }}>{description}
-        </p>
+        <div className="card-text" style={{ fontSize: "3vh" }} dangerouslySetInnerHTML={{ __html: description }} />
+        {/* <p className="card-text" style={{ fontSize: "3vh" }}>{description}
+        </p> */}
         
       </div>
     </div>

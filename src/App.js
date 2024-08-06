@@ -269,6 +269,13 @@ const getTitle = async (text) => {
   }
 };
 
+const parseText = (text) => {
+  return text
+    .replace(/\*\*(.*?)\*\*/g, '<h5>$1</h5>')  // Replace double asterisks with <h1>
+    .replace(/\*(.*?)\*/g, '<h6>$1</h6>');     // Replace single asterisks with <h2>
+};
+
+
 const getSummary = async (text) => {
   const groq = new Groq({ apiKey:`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` ,dangerouslyAllowBrowser: true});
 
@@ -283,7 +290,10 @@ const getSummary = async (text) => {
       model: 'llama3-70b-8192',
     });
 
-    return chatCompletion.choices[0]?.message?.content;
+    let summary =  chatCompletion.choices[0]?.message?.content;
+    summary = parseText(summary)
+    return summary
+
   } catch (error) {
     console.error("Error fetching summary:", error);
     return "Error fetching summary.";
