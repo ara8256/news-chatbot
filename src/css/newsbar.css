@@ -1,3 +1,14 @@
 .newsbar{
     background-color: #eaf2e1;
 }
+.speaker_button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 22px;
+    height: 22px;
+}
+
+.max{
+    max-height: 30vh;
+}

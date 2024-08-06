@@ -156,7 +156,7 @@ const [index, setIndex] = useState(0);
 
 const extractKeywordsFromQuery = async (query) => {
   const groq = new Groq({ apiKey:`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`,dangerouslyAllowBrowser: true });
-  console.log(query)
+  console.log("query",query)
 
   try {
     const chatCompletion = await groq.chat.completions.create({
@@ -182,20 +182,21 @@ const extractKeywordsFromQuery = async (query) => {
 const getNews = async (keywords) => {
   const url = 'https://google-news13.p.rapidapi.com/search';
   const params = new URLSearchParams({
-    keyword: keywords[0],
+    keyword: keywords,
     lr: 'en-US',
   });
 
   const options = {
     method: 'GET',
     headers: {
-      'x-rapidapi-key': 'f9d5b57419mshe8ed7982c05f8f5p1cbbc4jsn53c7214c1bdd',
+      'x-rapidapi-key': 'bbbcc6357emshfa5e0044a8ce1c2p1dd1a5jsnfdb65bfdfc04',
       'x-rapidapi-host': 'google-news13.p.rapidapi.com',
     },
   };
 
   try {
     const response = await fetch(`${url}?${params}`, options);
+    console.log(response)
 
     if (!response.ok) {
       const errorData = await response.json();
@@ -221,12 +222,12 @@ const getURLsAndImages = (data) => {
 const getTextFromNews = async (pages) => {
   for (let page of pages) {
     try {
-      const response = await axios.get(`https://cors-anywhere.herokuapp.com/${page.url}`, {
+      const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(page.url)}`;
+      const response = await axios.get(proxyUrl, {
         headers: {
           'Accept-Language': 'en-US,en;q=0.5',
         }
       });
-      
 
       const parser = new DOMParser();
       const doc = parser.parseFromString(response.data, 'text/html');
@@ -234,6 +235,7 @@ const getTextFromNews = async (pages) => {
 
       if (!paragraphs.startsWith('Updated ') && paragraphs) {
         console.log(paragraphs);
+        setUrl(page.url);
         return { text: paragraphs, url: page.url, thumbnail: page.thumbnail };
       }
     } catch (error) {
@@ -241,6 +243,8 @@ const getTextFromNews = async (pages) => {
     }
   }
 };
+
+
 
 
 const getTitle = async (text) => {
@@ -321,7 +325,7 @@ const getFixedNews = async (para) => {
   const response = await axios.get(`https://google-news13.p.rapidapi.com/${para}`, {
     params: { lr: 'en-US' },
     headers: {
-      'x-rapidapi-key': 'f9d5b57419mshe8ed7982c05f8f5p1cbbc4jsn53c7214c1bdd',
+      'x-rapidapi-key': 'bbbcc6357emshfa5e0044a8ce1c2p1dd1a5jsnfdb65bfdfc04',
       'x-rapidapi-host': 'google-news13.p.rapidapi.com'
     }
   });

@@ -55,32 +55,38 @@ const NewsCard = ({ headline, thumbnail, description }) => {
   }, [thumbnail]);
 
   return (
-    <div className="container mt-4">
-      <div className="card newsbar">
-        <div className="row no-gutters">
-          <div className="col-md-4">
-            {image ? (
-              <img src={image.src} className="card-img" alt={image.alt} />
-            ) : (
-              <img src="path/to/default-image.jpg" className="card-img" alt="Default" />
-            )}
-          </div>
-          <div className="col-md-8">
-            <div className="card-body">
-              <h1 className="card-title">{headline}</h1>
-
-             
-            </div>
-          </div>
+    <div className="container mt-4 max">
+      
+    <div className="card newsbar">
+    <div style={{maxHeight:"78vh",maxWidth:"80vw", overflowY: "auto" , overflowX:'hidden'}}>
+      <div className="row no-gutters">
+        <div className="col-md-4">
+          {image ? (
+            <img src={image.src} className="card-img" alt={image.alt} />
+          ) : (
+            <img src="path/to/default-image.jpg" className="card-img" alt="Default" />
+          )}
         </div>
-        <div className='row'>
-        <p className="card-text" style={{fontSize:"3vh"}}>{description}</p>
-        {/* <button onClick={handleSpeak}>
-          <img src={svg} alt="Speak" style={{ width: '18px', height: '18px' }} />
-        </button> */}
+        <div className="col-md-8">
+          <div className="card-body d-flex">
+            <h1 className="card-title">{headline}</h1>
+              
+          </div>
         </div>
       </div>
+      <div className='row'>
+        <div style={{marginLeft:"2vh"}}>
+      <button className="speaker_button" onClick={handleSpeak}>
+          <img src={svg} alt="Speak" style={{ width: '18px', height: '18px' }} />
+        </button>
+        </div>
+        <p className="card-text" style={{ fontSize: "3vh" }}>{description}
+        </p>
+        
+      </div>
     </div>
+  </div>
+  </div>
   );
 };
 
