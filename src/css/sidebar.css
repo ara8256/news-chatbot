@@ -39,10 +39,10 @@
 /* sidebar.css */
 
 .sidebar {
-    width: 30vh;
+    width: 40vh;
     background-color: #eaf2e1;
     padding: 15px;
-    position: fixed;
+    
     height: 100%;
     overflow: auto;
 }

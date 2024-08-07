@@ -9,7 +9,7 @@ const Navbar = () => {
     <div className="container-fluid d-flex flex-row">
       <a className="navbar-brand text-light" href="#" style={{fontSize:"2vh"}}>
         <img src={logo} alt="" width="40" height="30" className="d-inline-block align-text-top"/>
-        NewsHub
+        <b style={{fontSize:"2.5vh"}}>NewsHub</b>
       </a>
         <img src={sibot} alt="" width="85" height="24" className="d-inline-block justify-content-left mb-3" />
     </div>

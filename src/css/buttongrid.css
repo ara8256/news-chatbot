@@ -1,17 +1,49 @@
 /* App.css */
-.container-fluid {
+.container-fl{
     margin-top: auto;
+    align-items: end;
   }
   
   .card {
     margin-bottom: 10px;
+    cursor: pointer;
+    background-color: transparent;
+    box-shadow: 0px 0px 4px rgb(179, 163, 133);
+  }
+  .card:hover {
+    background-color:rgb(230, 218, 196,0.5)
   }
   
 
   .aa{
     /* background-color: aqua; */
-    position: fixed;
+    /* position: fixed; */
     bottom :10vh;
+  }
+
+  .background-container {
+    background: url('../pictures/sibot-bg.png');
+    background-size: cover;
+    height: 100vh;
+    position: relative;
+  }
+  
+  .background-container::before {
+    content: "";
+    position: absolute;
+    height: 10vh;
+    width:10vh;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:transparent;
+    
+  }
+  
+  .content-container {
+    position: relative;
+    z-index: 1;
   }
 
   

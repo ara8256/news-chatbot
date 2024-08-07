@@ -1,0 +1,7 @@
+.foot{
+    justify-content: center;
+    align-items: start;
+    position: relative;
+    bottom: 42vh;
+    margin-bottom: 10vh;
+}
